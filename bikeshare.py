@@ -11,29 +11,29 @@ CITY_DATA = { 'chicago': 'chicago.csv',
 def get_filters():
     """
     Asks user to specify a city, month, week and/or weekday to analyze.
-    
+
     Args:
         n/a
-        
+
     Returns:
         (str) city - name of the city to analyze, or None for all cities
         (str) month - name of the month to filter by, or None for all month
         (int) week - number if the calendar week to filter by, or None for all calendar weeks
         (str) day - name of the weekday to filter by, or None for all weekdays
-        
+
     """
-    
+
     print("\nHello! Let's explore some US bikeshare data!\n")
-    
+
     # Create default filter selection
     city = None
     month = None
     week = None
     day = None
-    
+
     # Create error message
     sorry = "Sorry, your selection could not be processed. Please give it another try!\n\n"
-    
+
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     list_of_valid_answers = ["chicago", "newyork", "new york", "newyorkcity", "new york city", "washington", "all", ""]
     while True:
@@ -42,16 +42,16 @@ def get_filters():
         if city in list_of_valid_answers:
             break
         print(sorry)
-        
+
     if city != "": print(" Thank you!")
-    
+
     if (city == "all") or (city == ""):
         city = None
         city_statement =  "you'll get to see the data from all our cities"
     else:
         if (city == "newyork") or (city == "new york") or (city == "newyorkcity"): city = "new york city"
         city_statement = "you'll get to see the {} data".format(city.title())
-    
+
     # TO DO: get user input for month (all, january, february, ... , june)
     list_of_valid_answers = ["january", "february", "march", "april", "may", "june", "all", ""]
     while True:
@@ -60,14 +60,14 @@ def get_filters():
         if month in list_of_valid_answers:
             break
         print(sorry)
-        
+
     if month != "": print(" Thank you!")
-    
+
     if (month == "all") or (month == ""):
         month = None
         month_statement = ",\n over the entire timespan, from January through June"
     else: month_statement = ",\n over the month of {}".format(month.title())
-    
+
     # TO DO: get user input for week (1, 2, ... , 26)
     max_cw_available = 26
     while True:
@@ -82,7 +82,7 @@ def get_filters():
                     break
             except: print(sorry)
             print(sorry)
-    
+
     week_statement = ""
     if week != None:
         print(" Thank you!")
@@ -97,15 +97,15 @@ def get_filters():
         if day in list_of_valid_answers:
             break
         print(sorry)
-        
+
     if day != "": print(" Thank you!")
-    
+
     if (day == "all") or (day == ""):
         day = None
         #day_statement = ",\n including all weekdays."
         day_statement = "."
     else: day_statement = ", for the weekday {}.".format(day.title())
-    
+
     # Create some fix filter selections for testing
     #city = "chicago"; month = "february"; day = "friday"
     #city = "chicago"; month = "february"; week = 8
@@ -115,16 +115,16 @@ def get_filters():
     #day = monday
     #city = None; month = None; week = None; day = None
     #city = "washington"
-    
+
     # Print the filter selection
     # print("\nfilter selection = \n city = {}\n month = {}\n week = {}\n day = {}\n".format(city, month, week, day))
-    
+
     # Print the filter selection statement
     print("\n\nOkay, " + city_statement + month_statement + week_statement + day_statement)
     input("\n Let's go? ... Hit Enter!")
     print('-'*40)
     print('\nLoading Divvy source data...\n')
-    
+
     print('-'*40)
     return city, month, week, day
 
@@ -141,46 +141,46 @@ def load_data(city, month, week, day):
         (str) month - name of the month to filter by, or None for all month
         (int) week - number if the calendar week to filter by, or None for all calendar weeks
         (str) day - name of the weekday to filter by, or None for all weekdays
-        
+
     Returns:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-        
+
     Comment:
         The load_data function works exactly like in the practice #3 section!
         With a little extra spice.
-    
+
     """
-    
+
     # Load data for requested city in dataframe and add 'City' column
     if city != None:
         df = pd.read_csv(CITY_DATA[city])
         df['City'] = city.title()
-        
+
     # Load data for all cities in dataframe and add 'City' column
     else:
         # print("number of CITY_DATA files =", len(CITY_DATA))
         city_data_keys = CITY_DATA.keys()
         # print("city_data_keys =", city_data_keys)
         union_list = []
-        
+
         for key in city_data_keys:
             df = pd.read_csv(CITY_DATA[key])
             df['City'] = key.title()
             union_list.append(df)
-            
+
         df = pd.concat(union_list, ignore_index=True, sort=False, copy=False)#; print("df = \n", df)
-    
+
     # Convert the start time column to datetime
     df['Start Time'] = pd.to_datetime(df['Start Time'])#; print("\nmax df['Start Time'] = {}\nmin df['Start Time'] = {}".format(max(df['Start Time']), min(df['Start Time'])))
     df['End Time'] = pd.to_datetime(df['End Time'])#; print("\nmax df['End Time'] = {}\nmin df['End Time'] = {}".format(max(df['End Time']), min(df['End Time'])))
-    
+
     # Create columns for month, week, day, hour based on Start Time and trip from to destinations
     df['Month'] = df['Start Time'].dt.month#; print("\nmax df['Month'] = {}\nmin df['Month'] = {}".format(max(df['Start Time']).month, min(df['Start Time']).month))#; print("\ndf['Month'] = \n", df['Month'])
     df['Week'] = df['Start Time'].dt.week#; print("\nmax df['Week'] = {}\nmin df['Week'] = {}".format(max(df['Start Time']).week, min(df['Start Time']).week))#; print("\ndf['Week'] = \n", df['Week'])
     df['Day of Week'] = df['Start Time'].dt.dayofweek#; print("\ndf['Day of Week'] = \n", df['Day of Week'])
     df['Hour'] = df['Start Time'].dt.hour#; print("\nmax df['Hour'] = {}\nmin df['Hour'] = {}".format(max(df['Start Time']).hour, min(df['Start Time']).hour))#; print("\ndf['Hour'] = \n", df['Hour'])
     df['Trip From To'] = df['Start Station']+" to "+df['End Station']#; print("\ndf['Trip From To'] = \n", df['Trip From To'])
-    
+
     # Filter dataframe to requested month or week - requesting all or nothing results in getting all the data, i.e. no filtering
     # Use if conditions to choose weeks over month and respect a week that lives in two different months
     if week != None:
@@ -192,14 +192,14 @@ def load_data(city, month, week, day):
             months = ['january', 'february', 'march', 'april', 'may', 'june']
             month_index = months.index(month)+1#; print("month_index = ", month_index)
             df = df.loc[df['Month'] == month_index]#; print("\ndf filtered by month {} = \n".format(month_index), df)
-    
+
     # Filter dataframe to requested day - requesting all or nothing results in getting all the data, i.e. no filtering
     if day != None:
         # Filter by list index of days and create new dataframe
         days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         day_index = days.index(day)#; print("day_index = ", day_index)
         df = df.loc[df['Day of Week'] == day_index]#; print("\ndf filtered by Day of Week {} = \n".format(day_index), df)
-        
+
     # Check timespan - does it match the selected month or week or day?
     if df.empty: print("\nThere is no data available for your selection.")
     # else: print("\ntimespan to check return df =\n filtered max(df['Start Time']) = {}\n filtered min(df['Start Time']) = {}".format(max(df['Start Time']), min(df['Start Time'])))
@@ -214,10 +214,10 @@ def time_stats(df):
 
     Args:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-        
+
     Returns:
         n/a
-    
+
     """
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
@@ -232,7 +232,7 @@ def time_stats(df):
     travels = df['Month'].value_counts()[top]
     # Print result statement
     print(" | Out of {} months in total, {} was the most common month, with {} travels.".format(total, name, travels))
-    
+
     # Display the most commen week
     # print("\ndf['Week'].value_counts() = \n", df['Week'].value_counts())
     # Get number of unique values, get the most frequent, get it's name, get it's number of travels
@@ -252,7 +252,7 @@ def time_stats(df):
     travels = df['Day of Week'].value_counts()[top]
     # Print result statement
     print(" | Out of {} weekdays in total, {} was the most common day, with {} travels.".format(total, name, travels))
-    
+
     # TO DO: display the most common start hour
     # print("\ndf['Hour'].value_counts() = \n", df['Hour'].value_counts())
     # Get number of unique values, get the most frequent, get it's name, get it's number of travels
@@ -265,21 +265,21 @@ def time_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-    
+
     input("\n Are you ready for The Most Popular Stations and Trip? ... Hit Enter!")
 
 
-    
+
 def station_stats(df):
     """
     Displays statistics on the most popular stations and trip.
-    
+
     Args:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-        
+
     Returns:
         n/a
-    
+
     """
 
     print('\nCalculating The Most Popular Stations and Trip...\n')
@@ -314,28 +314,28 @@ def station_stats(df):
     travels = df['Trip From To'].value_counts()[top]
     # Print result statement
     print(" | Out of {} trip combinations in total, {} was the most common combination, with {} travels.".format(total, name, travels))
-    
+
     # Emphasize if it is the same start and end station
-    if df['Start Station'].mode()[0] == df['End Station'].mode()[0]: 
+    if df['Start Station'].mode()[0] == df['End Station'].mode()[0]:
         print(" |\n | Note that for this selection, {} is both the most common start and end station!".format(df['End Station'].mode()[0]))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-    
+
     input("\n Are you ready for Trip Duration? ... Hit Enter!")
 
 
-    
+
 def trip_duration_stats(df):
     """
     Displays statistics on the total and average trip duration.
-    
+
     Args:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-        
+
     Returns:
         n/a
-    
+
     """
 
     print('\nCalculating Trip Duration...\n')
@@ -364,7 +364,7 @@ def trip_duration_stats(df):
         return addition
     """
     Is the small local functions section a good approach? I wanted to keep things in 1 line that fit in 1 line. My thought was visual clarity > documentation of a one-liner. Let me know!
-    
+
     """
     # Create result statement
     result_statement = " | The total travel time is"
@@ -389,10 +389,10 @@ def trip_duration_stats(df):
     result_statement += "."
     # Print result statement
     print(result_statement)
-    
+
     """
     >>> DEPRECATED IN FAVOR OF THE SOME SMALL FUNCTIONS APPROACH ABOVE <<<
-    
+
     # Calculate year values
     divider = 60*60*24*365; print("\ndivider = ", divider)
     years_float = result/divider; print("years_float = ", years_float)
@@ -435,10 +435,10 @@ def trip_duration_stats(df):
     seconds_decimal = result%divider/divider; print("seconds_decimal = ", seconds_decimal)
     seconds_int = int(seconds_floor); print("seconds_int = ", seconds_int)
     """
-    
+
     """
     >>> DEPRECATED IN FAVOR OF THE OTHER SMALL FUNCTION ABOVE <<<
-    
+
     result_statement = " | The total travel time was "
     if years_int >0:
         result_statement += "{} years".format(years_int)
@@ -465,7 +465,7 @@ def trip_duration_stats(df):
         if seconds_int >1: result_statement += "s"
         result_statement += "."
     """
-    
+
     # TO DO: display mean travel time
     result = df['Trip Duration'].mean()    #; print("\ndf['Trip Duration'].dtypes = {}\ndf['Trip Duration'].mean() = {} seconds".format(df['Trip Duration'].dtypes, result))
     # Create result statement
@@ -491,33 +491,33 @@ def trip_duration_stats(df):
     result_statement += "."
     # Print result statement
     print(result_statement)
-    
+
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-    
+
     input("\n Are you ready for User Stats? ... Hit Enter!")
 
 
-    
+
 def user_stats(df):
     """
     Displays statistics on bikeshare users.
-    
+
     Args:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-        
+
     Returns:
         n/a
-    
+
     """
-    
+
     print('\nCalculating User Stats...\n')
     start_time = time.time()
-    
+
     # Check df for existing values in specific columns
     # print("\ndf = \n", df.count())
     total_count = df.shape[0]#; print("df.shape[0] = ", total_count)
-    
+
     # TO DO: Display counts of user types
     # print("\ndf['User Type'].value_counts() = \n", df['User Type'].value_counts())
     # Check column for existing values
@@ -547,7 +547,7 @@ def user_stats(df):
     except:
         # Print except statement
         print(" | Based on the selection, there is no gender data available!")
-    
+
     # TO DO: Display earliest, most recent, and most common year of birth
     try:
         # print("\ndf['Birth Year'].value_counts() = \n", df['Birth Year'].value_counts())
@@ -569,36 +569,36 @@ def user_stats(df):
     except:
         # Print except statement
         print(" | Based on the selection, there is no birth year data available!")
-        
+
     ###
     #print("\ndf = \n", df[['City', 'User Type', 'Gender', 'Birth Year']])#, 'Gender', 'Birth Year'])
     ###
-    
+
     # Print a general reminder
     print("\n | Please keep in mind: gender and birth year data is not available for the city of Washington at the moment.")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-        
-    
-    
+
+
+
 def show_raw_data(df):
     """
     Asks for the interest in raw data and displays the selected number of lines of raw data.
-    
+
     Args:
         df - Pandas DataFrame containing city data filtered by month, week and/or weekday
-    
+
     Returns:
-        n/a   
-    
+        n/a
+
     """
     # Create line counter, from incl., to excl., and max available lines
     line_from = 0
     line_to = 0
     line_max = df.shape[0]
-        
-    # Ask for user input if / how many lines of raw data 
+
+    # Ask for user input if / how many lines of raw data
     while True:
         lines = input("\nWould you like to see some additional raw data?\n | Based on your selection, there are {} lines of raw data in total. Just type in the number of lines you would like to see.\n | Or hit Enter without any input to move on.\n\n Please enter your selection: ".format(line_max))
         # Check if the input is an integer
@@ -607,7 +607,7 @@ def show_raw_data(df):
         # Let management users jump real quick and without much effort out of a situation with too much detail
         except:
             break
-            
+
         # Handle funny poeple
         if lines == 0:
             print("\nAlright, sure, you'll get to see 0 lines of raw data.")
@@ -615,7 +615,7 @@ def show_raw_data(df):
         if lines < 0:
             lines = (-1)*lines
             print("\nYou typed in a negative number. Must have been accidentally.\nBut no problem, you'll get to see {} lines of raw data instead!".format(lines))
-            
+
         # Display rows from line_from to line_to until line_max
         line_to +=lines
         # Handle the line_max situation
@@ -625,7 +625,7 @@ def show_raw_data(df):
             print(df[line_from:line_max])
             print("\nThere is no more raw data available based on your selection.\n")
             break
-        # Make the selection of rows, eg. 0-3excl. look like an expected outcome for the user, eg. 1-3 
+        # Make the selection of rows, eg. 0-3excl. look like an expected outcome for the user, eg. 1-3
         print("\nFeel free to have a look at the lines {}-{} / {} from the Divvy raw data below :".format(line_from+1, line_to, line_max))
         # Print the raw data
         print(df[line_from:line_to])
@@ -635,27 +635,27 @@ def show_raw_data(df):
         if line_to == line_max:
             print("\nThere is no more raw data available based on your selection.\n")
             break
-    
+
 
 
 def main():
-    
+
     while True:
         city, month, week, day = get_filters()
         df = load_data(city, month, week, day)
-        
+
         # Check if data was loaded
         if not df.empty:
-            
+
             # Run statistic functions
             time_stats(df)
             station_stats(df)
             trip_duration_stats(df)
             user_stats(df)
-            
+
             # Run raw data functions
             show_raw_data(df)
-            
+
             # Check that a random doc_string works
             # print ("What the load_data function does: \n", load_data.__doc__)
 
@@ -663,37 +663,8 @@ def main():
         if (restart.lower() != 'yes') and (restart.lower() != 'y'):
             break
 
+        # Reference GitHub
+
 
 if __name__ == "__main__":
 	main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
