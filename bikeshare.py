@@ -35,7 +35,7 @@ def get_filters():
     sorry = "Sorry, your selection could not be processed. Please give it another try!\n\n"
 
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    list_of_valid_answers = ["chicago", "newyork", "new york", "newyorkcity", "new york city", "washington", "all", ""]
+    list_of_valid_answers = ["chicago", "newyork", "new york", "newyorkcity", "new york city", "nyc", "washington", "all", ""]
     while True:
         city = input("\nWhich city do you want to see data for?\n | Divvy is located in Chicago, New York City and Washington. You can also type in 'all' to see data for all cities.\n\n Please enter your selection: ")
         city = city.lower()
@@ -49,7 +49,7 @@ def get_filters():
         city = None
         city_statement =  "you'll get to see the data from all our cities"
     else:
-        if (city == "newyork") or (city == "new york") or (city == "newyorkcity"): city = "new york city"
+        if (city == "newyork") or (city == "new york") or (city == "newyorkcity") or (city == "nyc"): city = "new york city"
         city_statement = "you'll get to see the {} data".format(city.title())
 
     # TO DO: get user input for month (all, january, february, ... , june)
@@ -663,7 +663,7 @@ def main():
         if (restart.lower() != 'yes') and (restart.lower() != 'y'):
             break
 
-        
+
         print("Check out the project on GitHub if you like\n https://github.com/michaelthef1rst/bikeshare-project-pdsnd-github.git")
 
 
