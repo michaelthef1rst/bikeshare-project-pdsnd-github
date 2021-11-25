@@ -18,4 +18,8 @@ The source data is made available in three files:
 
 
 ### Credits
-It's important to give proper credit. Add links to any repo that inspired you or blogposts you consulted.
+
+> The Bikeshare Project itself as well as the remote repo in GitHub only exists thanks to Udacity!
+
+The GitHub repo is forked from [udacity/pdsnd_github](https://github.com/udacity/pdsnd_github).
+The styling for this README files is based on the [Markdown Guide from GitHub](https://guides.github.com/features/mastering-markdown/).
