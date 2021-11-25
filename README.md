@@ -1,6 +1,6 @@
 # Bikeshare Project :bike:
 
-*This project was created on Thursday, 2021-11-25.*
+> *This project was created on Thursday, 2021-11-25.*
 
 The Bikeshare Project explores the bikeshare data from Divvy, a bicycle shareing system in the US. The project imports the source data and provides an interactive user frontend in a terminal application. The data is processed using Python 3, NumPy and Pandas.
 
@@ -14,7 +14,7 @@ The source data is made available in three files:
  - new_york_city.csv
  - washington.csv
 
-*The source data is not pushed to github.*
+> :exclamation: The source data is not pushed to github.
 
 
 ### Credits
